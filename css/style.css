@@ -1,0 +1,16 @@
+*{
+    box-sizing: border-box;
+    background-color: antiquewhite;
+}
+
+main p {
+    text-align: center ;
+    color: blueviolet;
+    font-size: x-large;
+font-weight: bolder;
+}
+
+#images{
+height: 450px;
+width: 100%;
+}
