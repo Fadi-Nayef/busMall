@@ -10,7 +10,7 @@ main p {
 font-weight: bolder;
 }
 
-#images{
+img {
 height: 450px;
-width: 100%;
+width: 30%;
 }

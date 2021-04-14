@@ -1,6 +1,8 @@
 'use strict';
 
 //getting the elements from html
+let mallImages=document.getElementById('mallImages');
+
 let firstImg = document.getElementById('left');
 let secondImg = document.getElementById('mid');
 let thirdImg = document.getElementById('right');
@@ -12,7 +14,6 @@ let thirdImgIndex;
 //creating a local vars to use them in rendering and generating values
 let maxAttemps = 25;
 let attempsCounter = 0;
-let shows=0;
 
 //creating a constrctor Function
 function Choices(name, path) {
@@ -62,7 +63,7 @@ function renderImages() {
 
   while (
     firstImgIndex === secondImgIndex ||
-    firstImgIndex === thirdImgIndex ||
+    secondImgIndex === thirdImgIndex ||
     secondImgIndex === thirdImgIndex
   ) {
     firstImgIndex = generateRandomIndex();
@@ -71,14 +72,18 @@ function renderImages() {
   //   console.log(Choices.allChoices[firstImgIndex].path);
   //   console.log(Choices.allChoices[secondImgIndex].path);
   //   console.log(Choices.allChoices[thirdImgIndex].path);
-  firstImg.src = Choices.allChoices[firstImgIndex].path;shows++;
-  secondImg.src = Choices.allChoices[secondImgIndex].path;shows++;
-  thirdImg.src = Choices.allChoices[thirdImgIndex].path;shows++;
+  firstImg.src = Choices.allChoices[firstImgIndex].path;
+  Choices.allChoices[firstImgIndex].shows++;
+
+  secondImg.src = Choices.allChoices[secondImgIndex].path;
+  Choices.allChoices[secondImgIndex].shows++;
+
+  thirdImg.src = Choices.allChoices[thirdImgIndex].path;
+  Choices.allChoices[thirdImgIndex].shows++;
 }
 renderImages();
 
 //handle clicking using addEventListener
-let mallImages=document.getElementById('mallImages');
 
 mallImages.addEventListener('click',handleUserClick);
 
@@ -88,26 +93,39 @@ function handleUserClick(event){
 
   attempsCounter++;
 
-     console.log(event.target.id);
+  // console.log(event.target.id);
 
   if (attempsCounter<=maxAttemps){
 
     if(event.target.id==='left'){
 
-      Choices.allChoices[firstImgIndex].vote++;
-    }else if
+      Choices.allChoices[firstImgIndex].votes++;
+    }else if(event.target.id==='mid'){
+      Choices.allChoices[secondImgIndex].votes++;
 
-    (event.target.id==='mid'){
-      Choices.allChoices[secondImgIndex].vote++;
-
+    }else if(event.target.id==='right'){
+      Choices.allChoices[thirdImgIndex].votes++;
     }else{
-
-
-      Choices.allChoices[secondImgIndex].vote++;
+      alert('only click on the images');
+      attempsCounter--;
     }
-
+    renderImages();
 
   }else{
+
+    let button=document.createElement('button');
+    mallImages.appendChild(button);
+    button.textContent='Result';
+    button.hidden=true;
+  
+    button.addEventListener('click',showingList);
+    button.hidden=false;
+
+    mallImages.removeEventListener('click',handleUserClick);
+  
+  }
+
+  function showingList(){
     let list=document.getElementById('renderdList');
 
     let choicesResult;
@@ -115,10 +133,10 @@ function handleUserClick(event){
     for (let i = 0; i < Choices.allChoices.length ; i++){
 
       choicesResult=document.createElement('li');
-
       list.appendChild(choicesResult);
-      choicesResult.textContent=`${Choices.allChoices[i].name} had ${Choices.allChoices.votes} votes, and was seen ${shows} Times.`
 
+      choicesResult.textContent=`${Choices.allChoices[i].name} had ${Choices.allChoices.votes} votes, and was seen ${Choices.allChoices.shows} Times.`;
     }
-
-  }}
+  
+  
+  button.removeEventListener('click',showingList);}}
